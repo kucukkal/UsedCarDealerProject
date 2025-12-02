@@ -7,6 +7,10 @@ import SalesPage from './pages/SalesPage'
 import ServicePage from './pages/ServicePage'
 import FinancePage from './pages/FinancePage'
 import PromotionPage from './pages/PromotionPage'
+import AdminPage from './pages/AdminPage'
+
+// inside your <Routes>:
+
 
 function RequireAuth({ children }) {
     const token = localStorage.getItem('token')
@@ -64,6 +68,7 @@ export default function App() {
                                         {' | '}<Link to="/service">Service</Link>
                                         {' | '}<Link to="/finance">Finance</Link>
                                         {' | '}<Link to="/promotion">Promotion</Link>
+                                        {' | '}<Link to="/admin">Admin – User Management</Link>
                                     </>
                                 )}
 
@@ -176,6 +181,14 @@ export default function App() {
                         element={
                             <RequireAuth>
                                 <FinancePage />
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        path="/admin"
+                        element={
+                            <RequireAuth>
+                                <AdminPage />
                             </RequireAuth>
                         }
                     />
