@@ -1,0 +1,272 @@
+name: Used Car Dealer Project (App & Test Frameworks)
+
+on:
+  push:
+    paths:
+      - 'app/**'
+      - 'test/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'test/**'
+      - '.github/workflows/ci.yml'
+  workflow_dispatch:
+
+env:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: used_car_db
+  POSTGRES_HOST: 127.0.0.1
+  POSTGRES_PORT: 5432
+
+  ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+  ADMIN_ROLE: ${{ secrets.ADMIN_ROLE }}
+  ADMIN_LOCATION: ${{ secrets.ADMIN_LOCATION }}
+
+  LOCATION_1: ${{ secrets.LOCATION_1 }}
+  LOCATION_2: ${{ secrets.LOCATION_2 }}
+
+  BASE_URL: ${{ secrets.BASE_URL }}
+  LOGIN_URL: ${{ secrets.LOGIN_URL }}
+  API_URL: ${{ secrets.API_URL }}
+
+
+jobs:
+
+  # ------------------------------------------------
+  # 1️⃣ BUILD & START APPLICATION & API BDD
+  # ------------------------------------------------
+
+  setup-app:
+    name: Full Project Setup + Run + Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: used_car_db
+        options: >-
+          --health-cmd "pg_isready -U postgres -d used_car_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+        ports:
+          - 5432:5432
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: app/frontend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: app/backend
+        run: pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        working-directory: app/frontend
+        run: npm ci
+
+      - name: Install test dependencies
+        working-directory: test
+        run: |
+          pip install -r requirements.txt
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install UI dependencies
+        working-directory: test/UI
+        run: npm install
+
+      - name: Install Playwright
+        working-directory: test/UI
+        run: npx playwright install --with-deps
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Allure CLI
+        run: |
+          npm install -g allure-commandline --save-dev
+
+      - name: Create database tables
+        working-directory: app/backend
+        run: python create_tables.py
+
+      - name: Start backend
+        working-directory: app/backend
+        run: |
+          nohup python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 > backend.log 2>&1 &
+
+      - name: Wait for backend
+        run: |
+          python - <<'PY'
+          import time, urllib.request
+          for _ in range(60):
+              try:
+                  urllib.request.urlopen("http://127.0.0.1:8000/health")
+                  print("Backend ready")
+                  break
+              except:
+                  time.sleep(2)
+          else:
+              raise SystemExit("Backend failed to start")
+          PY
+      - name: Show backend log
+        if: always()
+        run: |
+              echo "==== backend.log ===="
+              cat app/backend/backend.log || true
+      - name: Seed admin
+        run: curl -X POST http://127.0.0.1:8000/auth/seed-admin
+
+      - name: Show backend log
+        run: cat app/backend/backend.log || true
+
+      - name: Check users table
+        run: |
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d used_car_db -c "SELECT username, role, location FROM users;"  
+
+      - name: Run API BDD tests
+        working-directory: test
+        run: |
+          behave API/features --tags ~@skip -f allure_behave.formatter:AllureFormatter -o reports/allure_results/api
+
+      - name: List API Allure output
+        if: always()
+        run: |
+          ls -R test/reports/allure_results/api || true
+
+      - name: Upload API Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-api
+          path: test/reports/allure_results/api
+
+      #      - name: Upload API BDD Report
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: api-bdd-report
+#          path: reports/api_report.html
+
+      - name: Download API Allure results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-api
+          path: test/reports/allure_results/api
+
+      - name: Start frontend
+        working-directory: app/frontend
+        run: |
+          nohup npm run dev -- --host 0.0.0.0 > frontend.log 2>&1 &
+
+      - name: Wait for frontend
+        run: |
+          python - <<'PY'
+          import time, urllib.request
+          for _ in range(60):
+              try:
+                  urllib.request.urlopen("http://127.0.0.1:5173")
+                  print("Frontend ready")
+                  break
+              except:
+                  time.sleep(2)
+          else:
+              raise SystemExit("Frontend failed to start")
+          PY
+
+      - name: Run UI BDD tests
+        working-directory: test/UI
+        env:
+          HEADLESS: "true"
+          ALLURE_RESULTS_DIR: "../reports/allure-results/ui"
+        run: |
+          mkdir -p ../reports/allure-results/ui
+          npx cucumber-js --tags "@admin" --format progress --format allure-cucumberjs/reporter
+
+      - name: Upload UI Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-ui
+          path: test/UI/allure-results
+
+      - name: Download UI Allure results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-ui
+          path: test/reports/allure-results/ui
+
+      - name: Run DB tests
+        working-directory: test
+        run: |
+          behave DB/features --tags ~@skip -f allure_behave.formatter:AllureFormatter -o reports/allure_results/db
+
+      - name: Upload DB Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-db
+          path: test/reports/allure_results/db
+
+      - name: Download DB Allure results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-db
+          path: test/reports/allure_results/db
+
+#      - name: Upload DB BDD Report
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: db-bdd-report
+#          path: reports/db/db_report.html
+
+#      - name: Upload Test Reports
+#        if: always()
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: automation-reports
+#          path: test/reports
+
+      - name: Merge Allure result files
+        run: |
+              mkdir -p test/reports/allure_results/merged
+              cp -R test/reports/allure_results/api/* test/reports/allure_results/merged/ 2>/dev/null || true
+              cp -R test/reports/allure_results/ui/* test/reports/allure_results/merged/ 2>/dev/null || true
+              cp -R test/reports/allure_results/db/* test/reports/allure_results/merged/ 2>/dev/null || true
+
+      - name: Generate unified Allure report
+        run: |
+              allure generate test/reports/allure_results/merged --clean -o test/reports/allure_report
+
+      - name: Upload unified Allure report
+        uses: actions/upload-artifact@v4
+        with:
+              name: unified-allure-report
+              path: test/reports/allure_report
