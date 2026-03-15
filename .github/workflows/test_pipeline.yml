@@ -96,7 +96,7 @@ jobs:
 
       - name: Install UI dependencies
         working-directory: test/UI
-        run: npm install
+        run: npm ci
 
       - name: Install Playwright
         working-directory: test/UI
