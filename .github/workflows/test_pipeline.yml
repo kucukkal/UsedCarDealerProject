@@ -5,12 +5,12 @@ on:
     paths:
       - 'app/**'
       - 'test/**'
-      - '.github/workflows/ci.yml'
+      - '.github/workflows/test_pipeline.yml'
   pull_request:
     paths:
       - 'app/**'
       - 'test/**'
-      - '.github/workflows/ci.yml'
+      - '.github/workflows/test_pipeline.yml'
   workflow_dispatch:
 
 env:
@@ -100,7 +100,7 @@ jobs:
 
       - name: Install Playwright
         working-directory: test/UI
-        run: npx playwright install --with-deps
+        run: npm exec playwright install --with-deps
 
       - name: Set up Java
         uses: actions/setup-java@v4
