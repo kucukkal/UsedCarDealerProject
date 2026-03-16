@@ -1,69 +1,199 @@
-# Used Car Dealer Project
+# Full Stack Test Automation Framework
 
-This repository contains a minimal but ready-to-extend implementation of the Used Car Dealer system
-based on the provided Software Requirements Document (SRD).
+### Playwright • Cucumber BDD • Python Behave • PostgreSQL • GitHub Actions • Allure
 
-## Structure
+This project demonstrates a **production-style automation architecture designed by an SDET**, validating **UI, API, and database layers** of a full-stack application with **BDD testing and CI/CD automation**.
 
-- `backend/` – FastAPI backend (Python) with PostgreSQL via SQLAlchemy.
-- `frontend/` – React SPA bootstrapped with Vite.
-- `docs/` – Word documents: how-to-setup, SRD, and technical requirements.
+The framework integrates **Playwright UI automation, Python Behave API testing, PostgreSQL validation, GitHub Actions CI pipelines, and unified Allure reporting**.
 
-## Backend Setup
+---
 
-1. Create a PostgreSQL database:
+# Project Overview
 
-   ```bash
-   createdb used_car_db
-   ```
+The system under test includes:
 
-2. Set environment variables (optional, defaults shown):
+• React frontend
+• FastAPI backend
+• PostgreSQL database
 
-   ```bash
-   export POSTGRES_USER=used_car_user
-   export POSTGRES_PASSWORD=password
-   export POSTGRES_DB=used_car_db
-   export POSTGRES_HOST=localhost
-   export POSTGRES_PORT=5432
-   ```
+Automation validates the system across **all layers of the application stack**.
 
-3. Install dependencies and run migrations / create tables:
+---
 
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   python -c "from app.database import Base, engine; Base.metadata.create_all(bind=engine)"
-   ```
+# Test Architecture
 
-4. Start the API with uvicorn:
+```
+UI BDD Tests (Playwright + Cucumber)
+            │
+            ▼
+       React Frontend
+            │
+            ▼
+       FastAPI Backend
+            │
+            ▼
+      PostgreSQL Database
+            │
+            ▼
+      Database Validation
+```
 
-   ```bash
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
+The framework verifies application behavior from **user interaction to database state**.
 
-   Seed an admin user (optional helper endpoint):
+---
 
-   ```bash
-   curl -X POST http://localhost:8000/auth/seed-admin
-   ```
+# Technologies
 
-## Frontend Setup
+## UI Automation
 
-1. Install Node.js (LTS).
-2. Install dependencies and start dev server:
+• Playwright
+• Cucumber BDD
+• TypeScript
+• Page Object Model
 
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+## API Automation
 
-The app will be available on `http://localhost:5173` and communicates with the backend at `http://localhost:8000`.
+• Python
+• Behave BDD
+• Requests library
 
-## Next Steps
+## Database Testing
 
-- Implement full SRD rules (discount validation, cron jobs, role-based routing, etc.).
-- Secure CORS origins and set a strong `SECRET_KEY`.
-- Add proper error handling, logging, and testing.
+• PostgreSQL
+• Python validation scripts
+
+## CI/CD
+
+• GitHub Actions
+• automated environment setup
+• sequential test pipeline
+
+## Reporting
+
+• Allure Reports
+• unified dashboard for UI, API, and DB tests
+
+---
+
+# Continuous Integration Pipeline
+
+The project includes an automated CI pipeline that runs the entire test suite.
+
+Pipeline stages:
+
+```
+Setup Backend + Frontend
+        │
+        ▼
+API BDD Tests
+        │
+        ▼
+UI BDD Tests
+        │
+        ▼
+DB BDD Tests
+        │
+        ▼
+Unified Allure Report
+```
+
+Each stage validates a different layer of the system.
+
+---
+
+# BDD Example
+
+Example scenario validating business functionality.
+
+```
+Scenario: Admin uploads inventory Excel file
+Given admin logs in
+When admin uploads an inventory Excel file
+Then cars should be added to inventory
+And cars should exist in the database
+```
+
+---
+
+# Key Engineering Features
+
+• Layered automation architecture
+• BDD test design
+• Playwright Page Object Model
+• API validation with Behave
+• database state verification
+• CI/CD automation with GitHub Actions
+• environment configuration using .env and GitHub Secrets
+• unified reporting using Allure
+
+---
+
+# Reporting
+
+Test results are aggregated into a **single Allure dashboard**.
+
+The report provides:
+
+• scenario results
+• step level execution details
+• screenshots on failure
+• execution timeline
+• test statistics
+
+---
+
+# Project Structure
+
+```
+app/
+   backend/
+   frontend/
+
+test/
+   API/
+   UI/
+   DB/
+   fixtures/
+   reports/
+
+docs/
+   portfolio website
+
+screenshots/
+   CI pipeline
+   Allure dashboard
+   architecture diagrams
+```
+
+---
+
+# Running Tests Locally
+
+Run API tests
+
+```
+behave API/features
+```
+
+Run UI tests
+
+```
+cd test/UI
+npx cucumber-js
+```
+
+Run database validation tests
+
+```
+behave DB/features
+```
+
+---
+
+# Portfolio Purpose
+
+This project demonstrates **real-world SDET skills including automation architecture design, CI/CD integration, and multi-layer testing strategy**.
+
+It serves as a **portfolio project showcasing modern software test engineering practices**.
+
+---
