@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SDET Automation Portfolio</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Full Stack Test Automation Framework</h1>
+
+<p>
+This project demonstrates a production-grade automation framework designed using modern
+Software Development Engineer in Test (SDET) practices. The framework validates
+<strong>UI, API, and database layers</strong> of a full stack application using
+Behavior Driven Development (BDD) and CI/CD pipelines.
+</p>
+
+<h2>Project Overview</h2>
+
+<p>The system under test consists of:</p>
+
+<ul>
+<li>React Frontend</li>
+<li>FastAPI Backend</li>
+<li>PostgreSQL Database</li>
+</ul>
+
+<p>
+Automation tests validate system behavior across the entire application stack,
+from user interactions in the browser to data validation in the database.
+</p>
+
+<h2>Technologies Used</h2>
+
+<ul>
+<li><strong>Playwright</strong> for UI automation</li>
+<li><strong>Cucumber BDD</strong> for behavior driven scenarios</li>
+<li><strong>Python Behave</strong> for API automation</li>
+<li><strong>PostgreSQL</strong> for database validation</li>
+<li><strong>GitHub Actions</strong> for CI/CD pipeline</li>
+<li><strong>Allure</strong> for test reporting dashboards</li>
+</ul>
+
+<h2>Automation Architecture</h2>
+
+<pre>
+UI BDD Tests (Playwright + Cucumber)
+        │
+        ▼
+React Frontend
+        │
+        ▼
+FastAPI Backend
+        │
+        ▼
+PostgreSQL Database
+        │
+        ▼
+Database Validation Tests
+</pre>
+
+<h2>CI/CD Pipeline</h2>
+
+<p>The CI pipeline automatically executes the automation suite through the following stages:</p>
+
+<pre>
+Environment Setup
+       │
+       ▼
+API BDD Tests
+       │
+       ▼
+UI BDD Tests
+       │
+       ▼
+Database Validation Tests
+       │
+       ▼
+Unified Allure Report
+</pre>
+
+<h2>BDD Scenario Example</h2>
+
+<pre>
+Scenario: Admin uploads inventory Excel file
+Given admin logs in
+When admin uploads inventory Excel file
+Then cars should be added to inventory
+And cars should exist in the database
+</pre>
+
+<h2>Reporting</h2>
+
+<p>
+Test results are aggregated into a unified <strong>Allure dashboard</strong> which provides:
+</p>
+
+<ul>
+<li>scenario execution results</li>
+<li>step-level reporting</li>
+<li>execution timeline</li>
+<li>failure diagnostics</li>
+<li>test statistics</li>
+</ul>
+
+<h2>Source Code</h2>
+
+<p>View the complete project on GitHub:</p>
+
+<p>
+<a href="https://github.com/kucukkal/UsedCarDealerProject">
+https://github.com/kucukkal/UsedCarDealerProject
+</a>
+</p>
+
+<h2>About This Portfolio</h2>
+
+<p>
+This portfolio project demonstrates real-world SDET capabilities including
+automation framework design, CI/CD integration, multi-layer testing strategy,
+and automated reporting systems used in modern engineering teams.
+</p>
+
+</body>
+</html>
