@@ -1,17 +1,3 @@
-API/features/auth.feature  ..F
---------------------------------------------------------------------------------
-FAILURE in step 'the response status should be 200':
-  Feature:  Authentication API
-  Scenario: Successful login returns JWT token
-ASSERT FAILED: Expected 200, got 422. Body: {"detail":[{"type":"missing","loc":["body","username"],"msg":"Field required","input":null},{"type":"missing","loc":["body","password"],"msg":"Field required","input":null}]}
-exception: Expected 200, got 422. Body: {"detail":[{"type":"missing","loc":["body","username"],"msg":"Field required","input":null},{"type":"missing","loc":["body","password"],"msg":"Field required","input":null}]}
---------------------------------------------------------------------------------
-API/features/promotion.feature  F
---------------------------------------------------------------------------------
-FAILURE in step 'I am authenticated':
-  Feature:  Promotion API
-  Scenario: PR user cannot apply more than 10 percent discount
-ASSERT FAILED: Login failed: {"detail":[{"type":"missing","loc":["body","username"],"msg":"Field required","input":null},{"type":"missing","loc":["body","password"],"msg":"Field required","input":null}]}
-exception: Login failed: {"detail":[{"type":"missing","loc":["body","username"],"msg":"Field required","input":null},{"type":"missing","loc":["body","password"],"msg":"Field required","input":null}]}
---------------------------------------------------------------------------------
+DB/features/inventory_db.feature  ....
+DB/features/sales_db.feature  
 
