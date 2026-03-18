@@ -1,138 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>SDET Automation Portfolio</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDET Automation Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
+  <div class="page-shell">
+    <header class="hero">
+      <nav class="topbar">
+        <div class="brand">SDET Portfolio</div>
+        <div class="top-links">
+          <a href="#architecture">Architecture</a>
+          <a href="#pipeline">CI/CD</a>
+          <a href="#reporting">Reporting</a>
+          <a href="#automation">Automation</a>
+        </div>
+      </nav>
 
-<h1>Full Stack Test Automation Framework</h1>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">FULL-STACK TEST AUTOMATION</span>
+          <h1>Production-style automation framework for UI, API, and database validation.</h1>
+          <p class="hero-text">
+            This portfolio project demonstrates modern <strong>SDET engineering</strong> practices using
+            Playwright, Cucumber BDD, Python Behave, PostgreSQL, GitHub Actions, and unified Allure reporting.
+          </p>
 
-<p>
-This project demonstrates a production-grade automation framework designed using modern
-Software Development Engineer in Test (SDET) practices. The framework validates
-<strong>UI, API, and database layers</strong> of a full stack application using
-Behavior Driven Development (BDD) and CI/CD pipelines.
-</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/YOUR_USERNAME/YOUR_PROJECT" target="_blank" rel="noopener noreferrer">View Source Code</a>
+            <a class="btn btn-secondary" href="#reporting">See Test Reports</a>
+          </div>
 
-<h2>Project Overview</h2>
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-value">UI</div>
+              <div class="stat-label">Playwright + Cucumber</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">API</div>
+              <div class="stat-label">Python Behave</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">DB</div>
+              <div class="stat-label">PostgreSQL Validation</div>
+            </div>
+          </div>
+        </div>
 
-<p>The system under test consists of:</p>
-
-<ul>
-<li>React Frontend</li>
-<li>FastAPI Backend</li>
-<li>PostgreSQL Database</li>
-</ul>
-
-<p>
-Automation tests validate system behavior across the entire application stack,
-from user interactions in the browser to data validation in the database.
-</p>
-
-<h2>Technologies Used</h2>
-
-<ul>
-<li><strong>Playwright</strong> for UI automation</li>
-<li><strong>Cucumber BDD</strong> for behavior driven scenarios</li>
-<li><strong>Python Behave</strong> for API automation</li>
-<li><strong>PostgreSQL</strong> for database validation</li>
-<li><strong>GitHub Actions</strong> for CI/CD pipeline</li>
-<li><strong>Allure</strong> for test reporting dashboards</li>
-</ul>
-
-<h2>Automation Architecture</h2>
-<img src="screenshots/architecture.png" alt="Automation Architecture" width="900">
-<pre>
-UI BDD Tests (Playwright + Cucumber)
-        │
-        ▼
-React Frontend
-        │
-        ▼
-FastAPI Backend
-        │
-        ▼
-PostgreSQL Database
-        │
-        ▼
-Database Validation Tests
-</pre>
-
-<h2>CI/CD Pipeline</h2>
-<img src="screenshots/ci_cd.png" alt="CI Pipeline" width="900">
-
-<p>The CI pipeline automatically executes the automation suite through the following stages:</p>
-
-<pre>
-Environment Setup
-       │
-       ▼
-API BDD Tests
-       │
-       ▼
-UI BDD Tests
-       │
-       ▼
-Database Validation Tests
-       │
-       ▼
-Unified Allure Report
-</pre>
-
-<h2>BDD Scenario Example</h2>
-
-<pre>
-Scenario: Admin uploads inventory Excel file
+        <div class="hero-panel">
+          <div class="code-card">
+            <div class="code-header">
+              <span></span><span></span><span></span>
+            </div>
+            <pre><code>Scenario: Admin uploads inventory Excel file
 Given admin logs in
 When admin uploads inventory Excel file
 Then cars should be added to inventory
-And cars should exist in the database
-</pre>
+And cars should exist in the database</code></pre>
+          </div>
+        </div>
+      </div>
+    </header>
 
-<h2>Allure Report</h2>
-<img src="screenshots/allure-report.png" alt="Allure Dashboard" width="900">
+    <main class="content">
+      <section class="section" id="overview">
+        <div class="section-heading">
+          <span class="section-kicker">OVERVIEW</span>
+          <h2>What this project demonstrates</h2>
+          <p>
+            A real-world test architecture validating a <strong>React frontend</strong>, <strong>FastAPI backend</strong>,
+            and <strong>PostgreSQL database</strong> across multiple automation layers.
+          </p>
+        </div>
 
-<p>
-Test results are aggregated into a unified <strong>Allure dashboard</strong> which provides:
-</p>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>UI Automation</h3>
+            <p>Business workflow coverage through Playwright browser automation and Cucumber BDD scenarios.</p>
+          </article>
+          <article class="feature-card">
+            <h3>API Validation</h3>
+            <p>REST endpoint validation using Python Behave, fixtures, and business-rule assertions.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Database Verification</h3>
+            <p>Direct PostgreSQL checks to confirm state transitions after UI and API operations.</p>
+          </article>
+          <article class="feature-card">
+            <h3>CI/CD Integration</h3>
+            <p>Automated pipeline orchestration in GitHub Actions with reporting and artifact generation.</p>
+          </article>
+        </div>
+      </section>
 
-<ul>
-<li>scenario execution results</li>
-<li>step-level reporting</li>
-<li>execution timeline</li>
-<li>failure diagnostics</li>
-<li>test statistics</li>
-</ul>
-<h2>UI Automation Examples</h2>
+      <section class="section" id="architecture">
+        <div class="section-heading">
+          <span class="section-kicker">ARCHITECTURE</span>
+          <h2>Automation architecture</h2>
+        </div>
 
-<h3>Login Flow</h3>
-<img src="screenshots/fullpage_LoginPage.png" alt="UI Login Automation" width="900">
-<img src="screenshots/full_LoginCredentials.png" alt="UI Login Automation" width="900">
-<h3>Inventory Upload</h3>
-<img src="screenshots/full_UploadExcel.png" alt="Inventory Upload Automation" width="900">
+        <div class="image-card">
+          <img src="screenshots/architecture.png" alt="Automation architecture diagram">
+        </div>
+      </section>
 
-<h3>Inventory Validation Results</h3>
-<img src="screenshots/full_inventory.png" alt="Inventory Validation Results" width="900">
-<h2>Source Code</h2>
+      <section class="section" id="pipeline">
+        <div class="section-heading">
+          <span class="section-kicker">CI/CD</span>
+          <h2>GitHub Actions pipeline</h2>
+          <p>Multi-stage execution validates API, UI, and database layers before producing a unified report.</p>
+        </div>
 
-<p>View the complete project on GitHub:</p>
+        <div class="image-card">
+          <img src="screenshots/ci_cd.png" alt="GitHub Actions CI pipeline screenshot">
+        </div>
+      </section>
 
-<p>
-<a href="https://github.com/kucukkal/UsedCarDealerProject">
-https://github.com/kucukkal/UsedCarDealerProject
-</a>
-</p>
+      <section class="section" id="reporting">
+        <div class="section-heading">
+          <span class="section-kicker">REPORTING</span>
+          <h2>Unified Allure dashboard</h2>
+          <p>Allure aggregates test results into a single dashboard with execution details, failures, and traceability.</p>
+        </div>
 
-<h2>About This Portfolio</h2>
+        <div class="image-card">
+          <img src="screenshots/allure-report.png" alt="Allure dashboard screenshot">
+        </div>
 
-<p>
-This portfolio project demonstrates real-world SDET capabilities including
-automation framework design, CI/CD integration, multi-layer testing strategy,
-and automated reporting systems used in modern engineering teams.
-</p>
+        <div class="bullet-panel">
+          <div class="bullet-card">
+            <h3>Included in the report</h3>
+            <ul class="clean-list">
+              <li>Scenario execution results</li>
+              <li>Step-level reporting</li>
+              <li>Execution timeline</li>
+              <li>Failure diagnostics</li>
+              <li>Cross-layer visibility</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
+      <section class="section" id="automation">
+        <div class="section-heading">
+          <span class="section-kicker">AUTOMATION EXAMPLES</span>
+          <h2>UI workflow screenshots</h2>
+        </div>
+
+        <div class="gallery-grid">
+          <article class="gallery-card">
+            <h3>Login Flow</h3>
+            <img src="screenshots/fullpage_LoginPage.png" alt="UI login automation screenshot">
+          </article>
+          <article class="gallery-card">
+            <h3>Inventory Upload</h3>
+            <img src="screenshots/full_UploadExcel.png" alt="Inventory upload automation screenshot">
+          </article>
+          <article class="gallery-card">
+            <h3>Validation Results</h3>
+            <img src="screenshots/full_inventory.png" alt="Inventory validation results screenshot">
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="stack">
+        <div class="section-heading">
+          <span class="section-kicker">TECH STACK</span>
+          <h2>Tools and engineering practices</h2>
+        </div>
+
+        <div class="stack-grid">
+          <div class="stack-item">Playwright</div>
+          <div class="stack-item">Cucumber BDD</div>
+          <div class="stack-item">Python Behave</div>
+          <div class="stack-item">FastAPI</div>
+          <div class="stack-item">PostgreSQL</div>
+          <div class="stack-item">GitHub Actions</div>
+          <div class="stack-item">Allure</div>
+          <div class="stack-item">Page Object Model</div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Built as an SDET portfolio project showcasing full-stack automation architecture, CI/CD integration, and unified reporting.</p>
+      <a href="https://github.com/YOUR_USERNAME/YOUR_PROJECT" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+    </footer>
+  </div>
 </body>
 </html>

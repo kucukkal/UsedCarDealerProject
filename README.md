@@ -1,199 +1,232 @@
-# Full Stack Test Automation Framework
+# 🚀 Full Stack Test Automation Framework
 
-### Playwright • Cucumber BDD • Python Behave • PostgreSQL • GitHub Actions • Allure
-
-This project demonstrates a **production-style automation architecture designed by an SDET**, validating **UI, API, and database layers** of a full-stack application with **BDD testing and CI/CD automation**.
-
-The framework integrates **Playwright UI automation, Python Behave API testing, PostgreSQL validation, GitHub Actions CI pipelines, and unified Allure reporting**.
-
----
-
-# Project Overview
-
-The system under test includes:
-
-• React frontend
-• FastAPI backend
-• PostgreSQL database
-
-Automation validates the system across **all layers of the application stack**.
+![CI](https://img.shields.io/badge/CI-GitHub%20Actions-green)
+![UI](https://img.shields.io/badge/UI-Playwright-blue)
+![API](https://img.shields.io/badge/API-Behave-orange)
+![DB](https://img.shields.io/badge/DB-PostgreSQL-purple)
+![Reports](https://img.shields.io/badge/Reports-Allure-red)
 
 ---
 
-# Test Architecture
+## 🌐 Live Portfolio
 
-```
+👉 https://kucukkal.github.io/UsedCarDealerProject/
+
+---
+
+## 📌 Overview
+
+This project demonstrates a **production-grade SDET automation framework** validating a full-stack application:
+
+- React Frontend
+- FastAPI Backend
+- PostgreSQL Database
+
+The framework implements **multi-layer test automation** using BDD principles and CI/CD pipelines.
+
+---
+
+## 🧠 What Makes This Project Stand Out
+
+✅ End-to-end validation across UI + API + DB  
+✅ Real CI/CD pipeline with GitHub Actions  
+✅ Unified Allure reporting (single dashboard)  
+✅ Page Object Model + BDD architecture  
+✅ Production-like system design
+
+---
+
+## 🏗️ Automation Architecture
+
+![Architecture](screenshots/architecture.png)
+
+
 UI BDD Tests (Playwright + Cucumber)
-            │
-            ▼
-       React Frontend
-            │
-            ▼
-       FastAPI Backend
-            │
-            ▼
-      PostgreSQL Database
-            │
-            ▼
-      Database Validation
-```
+│
+▼
+React Frontend
+│
+▼
+FastAPI Backend
+│
+▼
+PostgreSQL Database
+│
+▼
+Database Validation Tests
 
-The framework verifies application behavior from **user interaction to database state**.
 
 ---
 
-# Technologies
+## ⚙️ CI/CD Pipeline
 
-## UI Automation
+![CI Pipeline](screenshots/ci_pipeline.png)
 
-• Playwright
-• Cucumber BDD
-• TypeScript
-• Page Object Model
+Pipeline execution:
 
-## API Automation
 
-• Python
-• Behave BDD
-• Requests library
-
-## Database Testing
-
-• PostgreSQL
-• Python validation scripts
-
-## CI/CD
-
-• GitHub Actions
-• automated environment setup
-• sequential test pipeline
-
-## Reporting
-
-• Allure Reports
-• unified dashboard for UI, API, and DB tests
-
----
-
-# Continuous Integration Pipeline
-
-The project includes an automated CI pipeline that runs the entire test suite.
-
-Pipeline stages:
-
-```
-Setup Backend + Frontend
-        │
-        ▼
-API BDD Tests
-        │
-        ▼
-UI BDD Tests
-        │
-        ▼
-DB BDD Tests
-        │
-        ▼
+Setup Environment
+│
+▼
+API Tests (Behave)
+│
+▼
+UI Tests (Playwright + Cucumber)
+│
+▼
+DB Validation Tests
+│
+▼
 Unified Allure Report
-```
 
-Each stage validates a different layer of the system.
 
 ---
 
-# BDD Example
+## 📊 Allure Reporting
 
-Example scenario validating business functionality.
+![Allure Report](screenshots/allure_dashboard.png)
 
-```
+All test results are merged into a **single Allure dashboard** providing:
+
+- Scenario execution results
+- Step-level visibility
+- Failure diagnostics
+- Execution timeline
+- Cross-layer traceability
+
+---
+
+## 🖥️ UI Automation Examples
+
+### 🔐 Login Flow
+![Login](screenshots/ui_login.png)
+
+### 📤 Inventory Upload
+![Upload](screenshots/ui_inventory_upload.png)
+
+### ✅ Validation Results
+![Validation](screenshots/ui_inventory_results.png)
+
+---
+
+## 🧪 Example BDD Scenario
+
+
 Scenario: Admin uploads inventory Excel file
 Given admin logs in
-When admin uploads an inventory Excel file
+When admin uploads inventory Excel file
 Then cars should be added to inventory
 And cars should exist in the database
-```
+
 
 ---
 
-# Key Engineering Features
+## 🛠️ Tech Stack
 
-• Layered automation architecture
-• BDD test design
-• Playwright Page Object Model
-• API validation with Behave
-• database state verification
-• CI/CD automation with GitHub Actions
-• environment configuration using .env and GitHub Secrets
-• unified reporting using Allure
-
----
-
-# Reporting
-
-Test results are aggregated into a **single Allure dashboard**.
-
-The report provides:
-
-• scenario results
-• step level execution details
-• screenshots on failure
-• execution timeline
-• test statistics
+- Playwright (UI Automation)
+- Cucumber BDD
+- Python Behave (API Testing)
+- PostgreSQL (DB Validation)
+- FastAPI (Backend)
+- GitHub Actions (CI/CD)
+- Allure (Reporting)
 
 ---
 
-# Project Structure
-
-```
-app/
-   backend/
-   frontend/
-
-test/
-   API/
-   UI/
-   DB/
-   fixtures/
-   reports/
-
-docs/
-   portfolio website
-
-screenshots/
-   CI pipeline
-   Allure dashboard
-   architecture diagrams
-```
+# ⚙️ Local Setup & Execution
 
 ---
 
-# Running Tests Locally
-
-Run API tests
+## 1️⃣ Clone Repository
 
 ```
-behave API/features
+git clone https://github.com/kucukkal/UsedCarDealerProject.git
+cd UsedCarDealerProject
 ```
+2️⃣ Backend Setup (FastAPI)
+```
+cd app/backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+▶️ Run Backend
+```
+uvicorn app.main:app --reload --port 8000
+```
+3️⃣ Database Setup (PostgreSQL)
 
-Run UI tests
+Make sure PostgreSQL is running.
 
+Create database:
+```
+CREATE DATABASE used_car_db;
+```
+Update .env:
+```
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+POSTGRES_DB=used_car_db
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+```
+Seed Admin User
+```
+curl -X POST http://localhost:8000/auth/seed-admin
+```
+4️⃣ Frontend Setup (React)
+```
+cd app/frontend
+npm install
+npm run dev
+```
+App runs at:
+
+http://localhost:5173
+5️⃣ API Tests (Behave)
+```
+cd test/API
+pip install -r requirements.txt
+behave --tags ~@skip \
+  -f allure_behave.formatter:AllureFormatter \
+  -o ../reports/allure_results/api
+```
+6️⃣ UI Tests (Playwright + Cucumber)
 ```
 cd test/UI
-npx cucumber-js
+npm install
+npx playwright install
 ```
-
-Run database validation tests
-
+Run tests:
 ```
-behave DB/features
+npx cucumber-js --format allure-cucumberjs/reporter
 ```
+7️⃣ DB Tests
+```
+cd test/DB
+behave -f allure_behave.formatter:AllureFormatter \
+  -o ../reports/allure_results/db
+```
+📊 Generate Allure Report (Merged)
+```
+mkdir -p test/reports/allure_results/merged
 
----
+cp -R test/reports/allure_results/api/* test/reports/allure_results/merged/ 2>/dev/null || true
+cp -R test/reports/allure_results/db/* test/reports/allure_results/merged/ 2>/dev/null || true
+cp -R test/UI/allure-results/* test/reports/allure_results/merged/ 2>/dev/null || true
 
-# Portfolio Purpose
+allure generate test/reports/allure_results/merged --clean -o test/reports/allure_report
+allure open test/reports/allure_report
+```
+🔥 One Command (All-in-One)
+```
+mkdir -p test/reports/allure_results/merged && \
+cp -R test/reports/allure_results/api/* test/reports/allure_results/merged/ 2>/dev/null || true && \
+cp -R test/reports/allure_results/db/* test/reports/allure_results/merged/ 2>/dev/null || true && \
+cp -R test/UI/allure-results/* test/reports/allure_results/merged/ 2>/dev/null || true && \
+allure generate test/reports/allure_results/merged --clean -o test/reports/allure_report && \
+allure open test/reports/allure_report
+```
+👨‍💻 Author
 
-This project demonstrates **real-world SDET skills including automation architecture design, CI/CD integration, and multi-layer testing strategy**.
-
-It serves as a **portfolio project showcasing modern software test engineering practices**.
-
----
+Built as a full-stack SDET portfolio project demonstrating real-world automation architecture, CI/CD integration, and scalable testing practices.
