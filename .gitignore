@@ -17,8 +17,9 @@ app/frontend/.idea
 test/API/features/promotion.feature
 test/UI/playwright-report/
 test/UI/test-results/
-test/reports/allure_results/
-test/reports/allure_report/
-test/reports/api
-test/reports/ui
-test/reports/db
+test/reports/allure_results/**
+test/reports/allure_report/**
+test/reports/api/**
+test/reports/ui/**
+test/reports/db/**
+test/UI/allure-results/**
