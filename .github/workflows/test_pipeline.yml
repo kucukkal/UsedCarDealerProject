@@ -5,11 +5,13 @@ on:
     paths:
       - 'app/**'
       - 'test/**'
+      - 'docs/**'
       - '.github/workflows/test_pipeline.yml'
   pull_request:
     paths:
       - 'app/**'
       - 'test/**'
+      - 'docs/**'
       - '.github/workflows/test_pipeline.yml'
   workflow_dispatch:
 
@@ -32,17 +34,11 @@ env:
   LOGIN_URL: ${{ secrets.LOGIN_URL }}
   API_URL: ${{ secrets.API_URL }}
 
-
 jobs:
-
-  # ------------------------------------------------
-  # 1️⃣ BUILD & START APPLICATION & API BDD
-  # ------------------------------------------------
-
   setup-app:
     name: Full Project Setup + Run + Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     services:
       postgres:
@@ -60,7 +56,6 @@ jobs:
           - 5432:5432
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -86,13 +81,7 @@ jobs:
 
       - name: Install test dependencies
         working-directory: test
-        run: |
-          pip install -r requirements.txt
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        run: pip install -r requirements.txt
 
       - name: Install UI dependencies
         working-directory: test/UI
@@ -106,11 +95,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: "17"
 
       - name: Install Allure CLI
-        run: |
-          npm install -g allure-commandline --save-dev
+        run: npm install -g allure-commandline --save-dev
 
       - name: Create database tables
         working-directory: app/backend
@@ -130,25 +118,22 @@ jobs:
                   urllib.request.urlopen("http://127.0.0.1:8000/health")
                   print("Backend ready")
                   break
-              except:
+              except Exception:
                   time.sleep(2)
           else:
               raise SystemExit("Backend failed to start")
           PY
+
       - name: Show backend log
         if: always()
-        run: |
-              echo "==== backend.log ===="
-              cat app/backend/backend.log || true
+        run: cat app/backend/backend.log || true
+
       - name: Seed admin
         run: curl -X POST http://127.0.0.1:8000/auth/seed-admin
 
-      - name: Show backend log
-        run: cat app/backend/backend.log || true
-
       - name: Check users table
         run: |
-          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d used_car_db -c "SELECT username, role, location FROM users;"  
+          PGPASSWORD=postgres psql -h 127.0.0.1 -U postgres -d used_car_db -c "SELECT username, role, location FROM users;"
 
       - name: Run API BDD tests
         working-directory: test
@@ -157,18 +142,11 @@ jobs:
 
       - name: List API Allure output
         if: always()
-        run: |
-          ls -R test/reports/allure_results/api || true
+        run: ls -R test/reports/allure_results/api || true
 
       - name: Upload API Allure results
         if: always()
         uses: actions/upload-artifact@v4
-        with:
-          name: allure-results-api
-          path: test/reports/allure_results/api
-
-      - name: Download API Allure results
-        uses: actions/download-artifact@v4
         with:
           name: allure-results-api
           path: test/reports/allure_results/api
@@ -187,7 +165,7 @@ jobs:
                   urllib.request.urlopen("http://127.0.0.1:5173")
                   print("Frontend ready")
                   break
-              except:
+              except Exception:
                   time.sleep(2)
           else:
               raise SystemExit("Frontend failed to start")
@@ -196,15 +174,14 @@ jobs:
       - name: Run UI BDD tests
         working-directory: test/UI
         env:
-           HEADLESS: "true"
+          HEADLESS: "true"
         run: |
-            mkdir -p allure-results
-            npx cucumber-js --tags "@admin" --format progress --format allure-cucumberjs/reporter
+          mkdir -p allure-results
+          npx cucumber-js --tags "@admin" --format progress --format allure-cucumberjs/reporter
 
       - name: List UI Allure results
         if: always()
-        run: |
-            ls -R test/UI/allure-results || true
+        run: ls -R test/UI/allure-results || true
 
       - name: Upload UI Allure results
         if: always()
@@ -218,6 +195,10 @@ jobs:
         run: |
           behave DB/features --tags ~@skip -f allure_behave.formatter:AllureFormatter -o reports/allure_results/db
 
+      - name: List DB Allure output
+        if: always()
+        run: ls -R test/reports/allure_results/db || true
+
       - name: Upload DB Allure results
         if: always()
         uses: actions/upload-artifact@v4
@@ -225,73 +206,75 @@ jobs:
           name: allure-results-db
           path: test/reports/allure_results/db
 
-      - name: Download DB Allure results
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-results-db
-          path: test/reports/allure_results/db
-
-      - name: Download UI Allure results
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-results-ui
-          path: test/reports/allure-results/ui
-
       - name: Merge Allure result files
         run: |
-              mkdir -p test/reports/allure_results/merged
-              cp -R test/reports/allure_results/api/* test/reports/allure_results/merged/ 2>/dev/null || true
-              cp -R test/reports/allure_results/ui/* test/reports/allure_results/merged/ 2>/dev/null || true
-              cp -R test/reports/allure_results/db/* test/reports/allure_results/merged/ 2>/dev/null || true
+          mkdir -p test/reports/allure_results/merged
+          cp -R test/reports/allure_results/api/* test/reports/allure_results/merged/ 2>/dev/null || true
+          cp -R test/UI/allure-results/* test/reports/allure_results/merged/ 2>/dev/null || true
+          cp -R test/reports/allure_results/db/* test/reports/allure_results/merged/ 2>/dev/null || true
 
       - name: Generate unified Allure report
         run: |
-              allure generate test/reports/allure_results/merged --clean -o test/reports/allure_report
+          allure generate test/reports/allure_results/merged --clean -o test/reports/allure_report
 
       - name: Upload unified Allure report
         uses: actions/upload-artifact@v4
         with:
-              name: unified-allure-report
-              path: test/reports/
+          name: unified-allure-report
+          path: test/reports/allure_report
 
-publish-pages:
-  name: Publish Portfolio + Allure to GitHub Pages
-  needs: [Generate unified Allure report]
-  if: github.ref == 'refs/heads/main'
-  runs-on: ubuntu-latest
+      - name: Upload frontend log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-log
+          path: app/frontend/frontend.log
 
-  permissions:
-    contents: read
-    pages: write
-    id-token: write
+      - name: Upload backend log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-log
+          path: app/backend/backend.log
 
-  environment:
-    name: github-pages
-    url: ${{ steps.deployment.outputs.page_url }}
+  publish-pages:
+    name: Publish Portfolio + Allure to GitHub Pages
+    needs: [setup-app]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
-    - name: Download unified Allure report
-      uses: actions/download-artifact@v4
-      with:
-        name: unified-allure-report
-        path: site/allure
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-    - name: Copy portfolio website
-      run: |
-        mkdir -p site
-        cp -R docs/* site/
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Configure GitHub Pages
-      uses: actions/configure-pages@v5
+      - name: Download unified Allure report
+        uses: actions/download-artifact@v4
+        with:
+          name: unified-allure-report
+          path: site/allure
 
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: site
+      - name: Copy portfolio website
+        run: |
+          mkdir -p site
+          cp -R docs/* site/
 
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
