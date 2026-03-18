@@ -34,6 +34,7 @@ export class LoginPage extends BaseTestPage {
     }
     async gotoPage(pageName: string) {
         await this.directingToPage(pageName)
+        // await this.takeScreenshot("full_pageDirected.png",  true);
     }
 
     async login(userType:string) {
@@ -55,6 +56,7 @@ export class LoginPage extends BaseTestPage {
         //}
         await this.usernameInput.fill(username);
         await this.passwordInput.fill(password);
+        // await this.takeScreenshot("full_LoginCredentials.png",  true);
         await this.loginButton.click();
         await this.page.waitForTimeout(2000);
     }

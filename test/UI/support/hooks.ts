@@ -4,7 +4,7 @@ import { chromium } from "playwright";
 import type { CustomWorld } from "./world.js";
 
 Before(async function (this: CustomWorld) {
-    this.browser = await chromium.launch();
+    this.browser = await chromium.launch({headless: false});
     this.context = await this.browser.newContext();
     this.page = await this.context.newPage();
 });

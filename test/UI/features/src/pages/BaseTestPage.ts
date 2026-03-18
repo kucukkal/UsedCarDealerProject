@@ -1,4 +1,7 @@
 import { Page, expect } from '@playwright/test';
+import fs from 'fs';
+import path from 'path';
+
 
 export class BaseTestPage {
 
@@ -59,6 +62,23 @@ export class BaseTestPage {
      */
     async clickButton(buttonName: string) {
         await this.page.getByRole('button', { name: buttonName }).click();
+    }
+    async takeScreenshot(fileName: string, fullPage: boolean = true) {
+        const projectRoot = path.resolve(__dirname, '../../../../');
+        const reportsDir = path.join(projectRoot,  'reports', 'ui');
+
+        if (!fs.existsSync(reportsDir)) {
+            fs.mkdirSync(reportsDir, { recursive: true });
+        }
+
+        const filePath = path.join(reportsDir, `${fileName}.png`);
+
+        console.log(`Saving screenshot to: ${filePath}`);
+
+        await this.page.screenshot({
+            path: filePath,
+            fullPage
+        });
     }
 
     /**

@@ -1,13 +1,15 @@
 // test/UI/pages/InventoryPage.ts
 import { expect, Locator, Page } from '@playwright/test';
+import {BaseTestPage} from "./BaseTestPage";
 
-export class InventoryPage {
+export class InventoryPage extends BaseTestPage{
     readonly page: Page;
     readonly fileInput: Locator;
     readonly uploadButton: Locator;
     readonly tableRows: Locator;
 
     constructor(page: Page) {
+        super(page)
         this.page = page;
 
         // Excel upload section
@@ -21,6 +23,7 @@ export class InventoryPage {
     async uploadExcelFile(filePath: string) {
         await expect(this.fileInput).toBeVisible();
         await this.fileInput.setInputFiles(filePath);
+        // await this.takeScreenshot("full_UploadExcel.png",  true);
         await this.uploadButton.click();
 
         // wait for upload request to finish
@@ -34,7 +37,7 @@ export class InventoryPage {
         const matchingRows = this.page.locator('table tbody tr', {
             has: this.page.locator(`td:text-is("${location}")`)
         });
-
+        // await this.takeScreenshot("full_inventory.png",  true);
         await expect(matchingRows).toHaveCount(expectedCount);
     }
 }

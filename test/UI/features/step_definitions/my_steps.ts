@@ -16,7 +16,8 @@ import path from 'path'
 console.log("✅ my_steps.ts loaded");
 Given("User navigates to Login page", async function (this: CustomWorld) {
     const page = new LoginPage(this.page!);
-    await page.goto();
+    await page.goto()
+    await page.takeScreenshot("test/reports/ui/fullpage_LoginPage.png",  true);
     console.log("✅ step registered");
 });
 When("User enters {string} credentials", async function (this: CustomWorld, userType: string) {

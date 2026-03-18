@@ -167,13 +167,6 @@ jobs:
           name: allure-results-api
           path: test/reports/allure_results/api
 
-      #      - name: Upload API BDD Report
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: api-bdd-report
-#          path: reports/api_report.html
-
       - name: Download API Allure results
         uses: actions/download-artifact@v4
         with:
@@ -203,11 +196,15 @@ jobs:
       - name: Run UI BDD tests
         working-directory: test/UI
         env:
-          HEADLESS: "true"
-          ALLURE_RESULTS_DIR: "../reports/allure-results/ui"
+           HEADLESS: "true"
         run: |
-          mkdir -p ../reports/allure-results/ui
-          npx cucumber-js --tags "@admin" --format progress --format allure-cucumberjs/reporter
+            mkdir -p allure-results
+            npx cucumber-js --tags "@admin" --format progress --format allure-cucumberjs/reporter
+
+      - name: List UI Allure results
+        if: always()
+        run: |
+            ls -R test/UI/allure-results || true
 
       - name: Upload UI Allure results
         if: always()
@@ -215,12 +212,6 @@ jobs:
         with:
           name: allure-results-ui
           path: test/UI/allure-results
-
-      - name: Download UI Allure results
-        uses: actions/download-artifact@v4
-        with:
-          name: allure-results-ui
-          path: test/reports/allure-results/ui
 
       - name: Run DB tests
         working-directory: test
@@ -240,19 +231,11 @@ jobs:
           name: allure-results-db
           path: test/reports/allure_results/db
 
-#      - name: Upload DB BDD Report
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: db-bdd-report
-#          path: reports/db/db_report.html
-
-#      - name: Upload Test Reports
-#        if: always()
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: automation-reports
-#          path: test/reports
+      - name: Download UI Allure results
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-ui
+          path: test/reports/allure-results/ui
 
       - name: Merge Allure result files
         run: |
