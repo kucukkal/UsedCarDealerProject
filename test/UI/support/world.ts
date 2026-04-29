@@ -6,10 +6,12 @@ import type { Browser, BrowserContext, Page } from "playwright";
 export class CustomWorld extends World {
     browser?: Browser;
     context?: BrowserContext;
+    vehiclePayload: any;
     page?: Page;
 
     constructor(options: IWorldOptions) {
-        super(options);
+        super(options)
+        this.vehiclePayload = {};
     }
 }
 

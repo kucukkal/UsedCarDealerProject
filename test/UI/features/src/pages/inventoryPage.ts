@@ -19,7 +19,25 @@ export class InventoryPage extends BaseTestPage{
         // All table rows on page
         this.tableRows = page.locator('table tbody tr');
     }
+    async clickSingleCarEntrySubmitButton(name:string){
+        await this.clickButtonWithName(name);
+        await this.page.waitForTimeout(3000)
+    }
+    async rerouteSingleCarEntryApi(json: any){
+        await this.page.route('**/inventory**', async (route) => {
+            const request = route.request();
 
+            await route.continue({
+                method: 'POST',
+                headers: {
+                    ...request.headers(),
+                    'content-type': 'application/json',
+                },
+                postData: JSON.stringify(json),
+            });
+        });
+       await this.page.waitForTimeout(3000)
+    }
     async uploadExcelFile(filePath: string) {
         await expect(this.fileInput).toBeVisible();
         await this.fileInput.setInputFiles(filePath);

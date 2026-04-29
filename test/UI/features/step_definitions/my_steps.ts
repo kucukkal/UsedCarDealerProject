@@ -69,3 +69,33 @@ Then(/^User logs out$/,  async function () {
     const page = new LoginPage(this.page!);
     await page.logout();
 });
+When(/^I used the following values to reroute the api call$/, async function (dataTable) {
+    const rows = dataTable.hashes();
+
+    const vehicle = rows[0];
+
+    this.vehiclePayload = {
+        make: vehicle.make,
+        model: vehicle.model,
+        sub_model: vehicle.sub_model,
+        year: Number(vehicle.year),
+        mileage: Number(vehicle.mileage),
+        vehicle_type: vehicle.vehicle_type,
+        color: vehicle.color,
+        antique: vehicle.antique === 'Yes',
+        condition_type: vehicle.condition_type,
+        cost: Number(vehicle.cost),
+        sale_price: Number(vehicle.sale_price),
+        location: vehicle.location,
+    };
+
+    console.log('Saved payload:', this.vehiclePayload);
+});
+When('I reroute the inventory API call with my saved payload', async function (this: CustomWorld) {
+    const page = new InventoryPage(this.page!);
+    await page.rerouteSingleCarEntryApi(this.vehiclePayload);
+});
+Then(/^I submit the vehicle form$/, async function () {
+    const page = new InventoryPage(this.page!);
+    await page.clickButtonWithName("Add Car")
+});

@@ -6,6 +6,19 @@ in
     And User is at Home page
     Then User logs out
 
+  @admin1
+  Scenario: Network routing
+    Given User navigates to Login page
+    When User enters "admin" credentials
+    And User is at Home page
+    And I click the "Inventory" link
+    And I used the following values to reroute the api call
+      | make       | model     | sub_model | year | mileage | vehicle_type | color   | antique | condition_type | cost  | sale_price | location  |
+      | Toyota     | Camry     | SE        | 2019 | 42000   | Sedan        | White   | No      | Good           | 12000 | 16500      | Rockville |
+    And I reroute the inventory API call with my saved payload
+    Then I submit the vehicle form
+
+
   @admin
   Scenario: Admin uploads a file to add cars to the inventory
     Given User navigates to Login page

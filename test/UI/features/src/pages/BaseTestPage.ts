@@ -87,5 +87,10 @@ export class BaseTestPage {
     async verifyTextVisible(text: string) {
         await expect(this.page.getByText(text)).toBeVisible();
     }
+    async clickButtonWithName(name: string) {
+        const button = this.page.getByRole('button', { name: name })
+        await button.waitFor({ state: 'visible' })
+        await button.click();
+    }
 
 }
