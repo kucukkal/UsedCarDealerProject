@@ -92,5 +92,14 @@ export class BaseTestPage {
         await button.waitFor({ state: 'visible' })
         await button.click();
     }
+    async fillInputBox(name: string, text: string) {
+        await this.page.locator(`input[name="${name}"]`).fill(text);
+    }
+    async chooseFromDropdown(name: string, value: string) {
+        const locator = this.page.locator(`select[name="${name}"]`);
+        await locator.selectOption(value.trim());
+
+
+    }
 
 }

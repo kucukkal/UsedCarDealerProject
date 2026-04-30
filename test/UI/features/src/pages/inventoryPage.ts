@@ -20,12 +20,23 @@ export class InventoryPage extends BaseTestPage{
         this.tableRows = page.locator('table tbody tr');
     }
     async clickSingleCarEntrySubmitButton(name:string){
+        // await this.page!.pause();
         await this.clickButtonWithName(name);
-        await this.page.waitForTimeout(3000)
+        // const response = await this.page.waitForResponse(
+        //     res => res.url().includes('/inventory/') && res.request().method() === 'POST'
+        // );
+        //
+        // console.log(response.status());
+        // console.log(await response.text());
+        await this.page.waitForTimeout(7000)
     }
-    async rerouteSingleCarEntryApi(json: any){
-        await this.page.route('**/inventory**', async (route) => {
+    async rerouteSingleCarEntryApi(json: any) {
+        await this.page.route('**/inventory', async (route) => {
             const request = route.request();
+
+            console.log('Intercepted:', request.method(), request.url());
+            console.log('Original postData:', request.postData());
+            console.log('New payload:', json);
 
             await route.continue({
                 method: 'POST',
@@ -36,7 +47,6 @@ export class InventoryPage extends BaseTestPage{
                 postData: JSON.stringify(json),
             });
         });
-       await this.page.waitForTimeout(3000)
     }
     async uploadExcelFile(filePath: string) {
         await expect(this.fileInput).toBeVisible();
@@ -57,5 +67,52 @@ export class InventoryPage extends BaseTestPage{
         });
         // await this.takeScreenshot("full_inventory.png",  true);
         await expect(matchingRows).toHaveCount(expectedCount);
+    }
+    async enterValuesToSingleCarAddInputs(dataTable: { raw: () => [any, any]; }){
+        const [headers, values] = dataTable.raw();
+        for (const header of headers) {
+            const i: number = headers.indexOf(header);
+            if(header.trim() =='antique' || header.trim() =='condition_type')
+                await this.chooseFromDropdown(header.trim(), values[i].trim())
+            else
+                await this.fillInputBox(header.trim(), values[i].trim())
+
+        }
+    }
+    async mockCreateVehicleAndInventoryList(vehiclePayload: any) {
+        const mockedVehicle = {
+            id: 1,
+            vin_number: 'MOCKVIN123456789',
+            ...vehiclePayload,
+            status: 'Available',
+        };
+
+        await this.page.route('**/inventory/', async (route) => {
+            const request = route.request();
+
+            // Mock POST - do NOT record to DB
+            if (request.method() === 'POST') {
+                console.log('Mocking POST /inventory/');
+                await route.fulfill({
+                    status: 201,
+                    contentType: 'application/json',
+                    body: JSON.stringify(mockedVehicle),
+                });
+                return;
+            }
+
+            // Mock GET - return mocked table data
+            if (request.method() === 'GET') {
+                console.log('Mocking GET /inventory/');
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify([mockedVehicle]),
+                });
+                return;
+            }
+
+            await route.continue();
+        });
     }
 }

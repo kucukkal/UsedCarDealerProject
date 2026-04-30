@@ -11,8 +11,9 @@ import type { CustomWorld } from "../../support/world";
 import { LoginPage } from "../src/pages/loginPage"
 import { InventoryPage } from "../src/pages/inventoryPage"
 import path from 'path'
+import { setDefaultTimeout } from '@cucumber/cucumber';
 
-
+setDefaultTimeout(5 * 60 * 1000); // 10 minutes
 console.log("✅ my_steps.ts loaded");
 Given("User navigates to Login page", async function (this: CustomWorld) {
     const page = new LoginPage(this.page!);
@@ -26,6 +27,7 @@ When("User enters {string} credentials", async function (this: CustomWorld, user
 });
 Then("User is at Home page", async function (this: CustomWorld) {
     const page = new LoginPage(this.page!);
+    // await page.getNavigationBaseLine()
     await page.getMessage();
 });
 
@@ -97,5 +99,31 @@ When('I reroute the inventory API call with my saved payload', async function (t
 });
 Then(/^I submit the vehicle form$/, async function () {
     const page = new InventoryPage(this.page!);
-    await page.clickButtonWithName("Add Car")
+    await page.clickSingleCarEntrySubmitButton("Add Car")
+});
+When(/^I enter the values using the following values$/, async function (dataTable) {
+    const page = new InventoryPage(this.page!);
+    await page.enterValuesToSingleCarAddInputs(dataTable);
+    const rows = dataTable.hashes();
+
+    const vehicle = rows[0];
+
+    this.vehiclePayload = {
+        make: vehicle.make,
+        model: vehicle.model,
+        sub_model: vehicle.sub_model,
+        year: Number(vehicle.year),
+        mileage: Number(vehicle.mileage),
+        vehicle_type: vehicle.vehicle_type,
+        color: vehicle.color,
+        antique: vehicle.antique === 'Yes',
+        condition_type: vehicle.condition_type,
+        cost: Number(vehicle.cost),
+        sale_price: Number(vehicle.sale_price),
+        location: vehicle.location,
+    };
+});
+Given(/^I mock the inventory API call with the values above$/, async function () {
+    const page = new InventoryPage(this.page!);
+    await page.mockCreateVehicleAndInventoryList(this.vehiclePayload)
 });

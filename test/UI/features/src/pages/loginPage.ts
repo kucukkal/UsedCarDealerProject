@@ -21,7 +21,9 @@ export class LoginPage extends BaseTestPage {
         this.logoutButton = page.getByRole('button', { name: 'Logout' });
         this.messageText = page.getByText('Welcome to the Used Car');
     }
-
+    // async getNavigationBaseLine() {
+    //     await expect(this.page.locator('nav')).toHaveScreenshot('../../../../test/pictures/nav-bar.png');
+    // }
     async goto() {
         await this.page.goto(env.LOGIN_URL);
         await this.verifyLoginPage();

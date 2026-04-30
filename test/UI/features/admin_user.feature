@@ -12,10 +12,14 @@ in
     When User enters "admin" credentials
     And User is at Home page
     And I click the "Inventory" link
-    And I used the following values to reroute the api call
+#    And I used the following values to reroute the api call
+#      | make       | model     | sub_model | year | mileage | vehicle_type | color   | antique | condition_type | cost  | sale_price | location  |
+#      | Toyota     | Camry     | SE        | 2019 | 42000   | Sedan        | White   | No      | Good           | 12000 | 16500      | Rockville |
+    And I enter the values using the following values
       | make       | model     | sub_model | year | mileage | vehicle_type | color   | antique | condition_type | cost  | sale_price | location  |
-      | Toyota     | Camry     | SE        | 2019 | 42000   | Sedan        | White   | No      | Good           | 12000 | 16500      | Rockville |
-    And I reroute the inventory API call with my saved payload
+      | BMW        | Z4        | SE        | 2009 | 24000   | Sedan        |Red      | No      | Good           | 14500 | 19500      | Charlotte |
+#    And I reroute the inventory API call with my saved payload
+    And I mock the inventory API call with the values above
     Then I submit the vehicle form
 
 
